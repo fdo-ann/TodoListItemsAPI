@@ -43,12 +43,20 @@ namespace TodoListItemsAPI.Services
                 return null;
             }
             todoItem = await todoListResponse.Content.ReadFromJsonAsync<TodoItem>();
+
             if(todoItem != null)
             {
                 todos.Add(todoItem);
+                //3.Save TodoItem
                 await _todoRepository.SaveTodoItemsAsync(todos);
             }
             return todoItem;
+        }
+
+        public async Task<List<TodoItem?>> GetAllTodoItemsAsync()
+        {
+            var TodoItemsList = await _todoRepository.GetAllTodoItemAsync();
+            return TodoItemsList;
         }
     }
 }

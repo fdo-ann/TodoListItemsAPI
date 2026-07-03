@@ -37,5 +37,20 @@ namespace TodoListItemsAPI.Controllers
             }
             return Ok(todoItem);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllTodoItemsAsync(int count) {
+
+            var TodoListItems = await _todoService.GetAllTodoItemsAsync();
+            if (TodoListItems.Count==0)
+            {
+                return NotFound(new
+                {
+                    Message = "No Todo items found in the table"
+                });
+            }
+            return Ok(TodoListItems);
+        
+        }
     }
 }

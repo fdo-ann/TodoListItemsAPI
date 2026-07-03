@@ -34,6 +34,7 @@ namespace TodoListItemsAPI.Repositories
 
                 await command.ExecuteNonQueryAsync();
             }
+            await connection.CloseAsync();
         }
 
         public async Task<TodoItem?> GetTodoItemByIdAsync(int id)
@@ -56,6 +57,31 @@ namespace TodoListItemsAPI.Repositories
                 };
             }
             return null;
+        }
+
+        public async Task<List<TodoItem?>> GetAllTodoItemAsync()
+        {
+            List<TodoItem> todoItemsList = new List<TodoItem>();
+
+            using SqlConnection connection = new SqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            string sql = @"Select * from Todos";
+            using SqlCommand command = new SqlCommand(sql, connection);
+            //command.Parameters.AddWithValue("@Id", id);
+
+            using SqlDataReader reader = await command.ExecuteReaderAsync();
+            while (reader.Read())
+            {
+                    todoItemsList.Add(new TodoItem
+                    {
+                        Id = Convert.ToInt32(reader["Id"]),
+                        UserId = Convert.ToInt32(reader["UserId"]),
+                        Title = reader["Title"].ToString(),
+                        Completed = Convert.ToBoolean(reader["Completed"])
+                    });
+            }
+            return todoItemsList;
         }
 
 
