@@ -18,12 +18,20 @@ namespace TodoListItemsAPI.Controllers
         [HttpPost("retrieve")]
         public async Task<IActionResult> RetrieveTodos()
         {
-            await _todoService.RetrieveAndSaveTodosAsync();
+            var isValidUrl = await _todoService.RetrieveAndSaveTodosAsync();
 
+            if (!isValidUrl)
+            {
+                return NotFound(new
+                {
+                    Message = "URL not found"
+                });
+            }
             return Ok(new
             {
-                Message = "First 10 todo items retrieved successfully"
+                Message = "Todo items retrieved successfully"
             });
+
         }
 
         [HttpGet("{id}")]

@@ -6,10 +6,9 @@ namespace TodoListItemsAPI.Repositories
     public class TodoRepository
     {
         private readonly string _connectionString;
-
         public TodoRepository(IConfiguration Configuration)
         {
-            _connectionString = Configuration.GetConnectionString("ToDoListDbConnection");
+            _connectionString = Configuration.GetConnectionString("ToDoListDbConnection")!;
         }
 
         public async Task SaveTodoItemsAsync(List<TodoItem> todoItems)
@@ -52,14 +51,16 @@ namespace TodoListItemsAPI.Repositories
                 {
                     Id = Convert.ToInt32(reader["Id"]),
                     UserId = Convert.ToInt32(reader["UserId"]),
-                    Title = reader["Title"].ToString(),
+                    Title = reader["Title"].ToString()!,
                     Completed = Convert.ToBoolean(reader["Completed"])
                 };
             }
+            await connection.CloseAsync();
             return null;
+
         }
 
-        public async Task<List<TodoItem?>> GetAllTodoItemAsync()
+        public async Task<List<TodoItem>> GetAllTodoItemAsync()
         {
             List<TodoItem> todoItemsList = new List<TodoItem>();
 
@@ -68,19 +69,19 @@ namespace TodoListItemsAPI.Repositories
 
             string sql = @"Select * from Todos";
             using SqlCommand command = new SqlCommand(sql, connection);
-            //command.Parameters.AddWithValue("@Id", id);
 
             using SqlDataReader reader = await command.ExecuteReaderAsync();
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                     todoItemsList.Add(new TodoItem
                     {
                         Id = Convert.ToInt32(reader["Id"]),
                         UserId = Convert.ToInt32(reader["UserId"]),
-                        Title = reader["Title"].ToString(),
+                        Title = reader["Title"].ToString()!,
                         Completed = Convert.ToBoolean(reader["Completed"])
                     });
             }
+            await connection.CloseAsync();
             return todoItemsList;
         }
 
