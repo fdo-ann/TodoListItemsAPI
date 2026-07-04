@@ -1,3 +1,4 @@
+using TodoListItemsAPI.Middleware;
 using TodoListItemsAPI.Repositories;
 using TodoListItemsAPI.Services;
 
@@ -13,6 +14,8 @@ builder.Services.AddScoped<TodoRepository>();
 builder.Services.AddHttpClient<TodoService>();
 
 var app = builder.Build();
+
+app.UseExceptionHandlingMiddleware();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
