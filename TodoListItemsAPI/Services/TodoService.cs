@@ -39,7 +39,7 @@ namespace TodoListItemsAPI.Services
             //2. Retrieve from API
 
             var todoListResponse = await _httpClient.GetAsync($"https://jsonplaceholder.typicode.com/todos/{id}");
-            if (todoListResponse == null) { 
+            if (!todoListResponse.IsSuccessStatusCode) { 
                 return null;
             }
             todoItem = await todoListResponse.Content.ReadFromJsonAsync<TodoItem>();
@@ -55,7 +55,7 @@ namespace TodoListItemsAPI.Services
 
         public async Task<List<TodoItem?>> GetAllTodoItemsAsync()
         {
-            var TodoItemsList = await _todoRepository.GetAllTodoItemAsync();
+            var TodoItemsList = await _todoRepository.GetAllTodoItemAsync();  
             return TodoItemsList;
         }
     }
