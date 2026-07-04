@@ -18,9 +18,9 @@ namespace TodoListItemsAPI.Controllers
         [HttpPost("retrieve")]
         public async Task<IActionResult> RetrieveTodos()
         {
-            var isValidUrl = await _todoService.RetrieveAndSaveTodosAsync();
+            var isUrlWorking = await _todoService.RetrieveAndSaveTodosAsync();
 
-            if (!isValidUrl)
+            if (!isUrlWorking)
             {
                 return NotFound(new
                 {
